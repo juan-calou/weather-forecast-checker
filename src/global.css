@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Lato', 'Helvetica Neue', sans-serif;
+  background-color: #eeeeee;
+}
+
+.content {
+  padding-left: 250px;
+}
