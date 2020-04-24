@@ -17,6 +17,9 @@ import './styles/Navbar.css';
           <Link className={path==='/forecast'?'active link':'link'} to="/forecast">
             <FontAwesomeIcon icon={faCloudSunRain} />&nbsp;5-day Forecast
           </Link>
+          <Link className={path==='/listpredictions'?'active link':'link'} to="/listpredictions">
+            <FontAwesomeIcon icon={faCloudSunRain} />&nbsp;Predictions DB
+          </Link>
         </div>
       </aside>
     );

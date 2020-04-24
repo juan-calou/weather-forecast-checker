@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import firebase from '../components/firebase';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
@@ -21,12 +22,12 @@ export default class Forecast extends Component {
   formatDate = d => {
     var date = new Date(d * 1000);
     var dd = date.getDate();
-    var mm = date.getMonth()+1; 
+    var mm = date.getMonth()+1;
     var yyyy = date.getFullYear();
     var hh = date.getHours();
     if(dd < 10) dd = '0' + dd;
     if(mm < 10) mm = '0' + mm;
-    
+
     return(mm + '/' + dd + '/' + yyyy + ' - ' + hh);
   }
 
@@ -56,6 +57,20 @@ export default class Forecast extends Component {
 
   handleCityChange = e => {
     this.fetchCurrent(e.target.value);
+  }
+
+  handleStoreData = () => {
+
+    const today = new Date().getTime();
+    const datenice = this.formatDate(today / 1000);
+    const prediction = {
+      date: today,
+      datenice,
+      forecast: this.state.data
+    };
+
+    const db = firebase.firestore();
+    db.collection('predictions').add(prediction);
   }
 
   componentDidMount() {
@@ -101,14 +116,17 @@ export default class Forecast extends Component {
               <div className="card">
                 <div className="city">
                   <label htmlFor="city">City</label>
-                  <select 
-                    name="city" 
-                    value={this.state.city} 
-                    onChange={this.handleCityChange} 
+                  <select
+                    name="city"
+                    value={this.state.city}
+                    onChange={this.handleCityChange}
                   >
                     <option value={process.env.REACT_APP_PERGAMINO_ID}>Pergamino</option>
                     <option value={process.env.REACT_APP_BUENOS_AIRES_ID} >Buenos Aires</option>
                   </select>
+                </div>
+                <div className="store">
+                  <button onClick={this.handleStoreData} >Store Data</button>
                 </div>
               </div>
             </div>

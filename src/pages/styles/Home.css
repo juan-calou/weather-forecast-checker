@@ -21,7 +21,8 @@
   width: 100%;
   display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: space-between;
   min-width: 0;
   word-wrap: break-word;
   margin-top: 25px;
@@ -71,9 +72,9 @@
   width: 200px;
   margin: 0 5px;
 }
-.card button {
-  width: 75px;
-  margin-left: 10px;;
+.card .store button {
+  width: 300px;
+  margin: 7px 10px 0 30px;
 }
 
 .card:hover {

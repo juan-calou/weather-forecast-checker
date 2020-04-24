@@ -5,6 +5,7 @@ import Layout from './Layout';
 import Home from '../pages/Home';
 import Current from '../pages/Current';
 import Forecast from '../pages/Forecast';
+import Prediction from '../pages/Prediction';
 import NotFound from '../pages/NotFound';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route exact path="/" component={Home} />
           <Route exact path="/current" component={Current} />
           <Route exact path="/forecast" component={Forecast} />
+          <Route exact path="/listpredictions" component={Prediction} />
           <Route component={NotFound} />
         </Switch>
       </Layout>
