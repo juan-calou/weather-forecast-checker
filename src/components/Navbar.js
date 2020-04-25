@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCloudSun, faCloudSunRain } from '@fortawesome/free-solid-svg-icons'
+import { faCloudSun, faCloudSunRain, faWalking, faCompress } from '@fortawesome/free-solid-svg-icons'
 
 import './styles/Navbar.css';
 
@@ -18,7 +18,10 @@ import './styles/Navbar.css';
             <FontAwesomeIcon icon={faCloudSunRain} />&nbsp;5-day Forecast
           </Link>
           <Link className={path==='/listpredictions'?'active link':'link'} to="/listpredictions">
-            <FontAwesomeIcon icon={faCloudSunRain} />&nbsp;Predictions DB
+            <FontAwesomeIcon icon={faWalking} />&nbsp;Predictions DB
+          </Link>
+          <Link className={path==='/comparepredictions'?'active link':'link'} to="/comparepredictions">
+            <FontAwesomeIcon icon={faCompress} />&nbsp;Compare
           </Link>
         </div>
       </aside>

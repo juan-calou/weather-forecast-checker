@@ -98,6 +98,13 @@ export default class Forecast extends Component {
           <div className="row">
             <div className="Home__col col-12 col-md-12">
               <div className="card">
+                <h1>Predictions stored on the database</h1>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="Home__col col-12 col-md-12">
+              <div className="card">
                 <table className="table table-bordered table-striped">
                   <thead>
                     <tr>

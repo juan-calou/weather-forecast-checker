@@ -23,7 +23,7 @@ export default class Current extends Component {
   fetchCurrent = async city => {
     this.setState({loading: true});
     const KEY = process.env.REACT_APP_API_KEY;
-    
+
     const res = await axios.get( 'http://api.openweathermap.org/data/2.5/weather?id=' + city + '&appid=' + KEY)
       .then(res => {
           var data = res.data;
@@ -54,12 +54,19 @@ export default class Current extends Component {
           <div className="row">
             <div className="Home__col col-12 col-md-12">
               <div className="card">
+                <h1>Current Weather</h1>
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            <div className="Home__col col-12 col-md-12">
+              <div className="card">
                 <div className="city">
                   <label htmlFor="city">City</label>
-                  <select 
-                    name="city" 
-                    value={this.state.city} 
-                    onChange={this.handleCityChange} 
+                  <select
+                    name="city"
+                    value={this.state.city}
+                    onChange={this.handleCityChange}
                   >
                     <option value={process.env.REACT_APP_PERGAMINO_ID}>Pergamino</option>
                     <option value={process.env.REACT_APP_BUENOS_AIRES_ID} >Buenos Aires</option>
@@ -72,7 +79,7 @@ export default class Current extends Component {
             <div className="Home__col col-12 col-md-12">
               <div className="card">
                 {
-                  this.state.loading 
+                  this.state.loading
                   ?
                   <FontAwesomeIcon icon={faSpinner} className="fa fa-spin" />
                   :

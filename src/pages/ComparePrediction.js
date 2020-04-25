@@ -1,21 +1,34 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import firebase from '../components/firebase';
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
-
-const KEY = process.env.REACT_APP_API_KEY;
 
 export default class Forecast extends Component {
 
   constructor(props) {
     super(props);
+    const current = new Date();
+    const currenttime = current.getHours();
+    const possibletime = [0,3,6,9,12,15,18,21];
+    const try_time = currenttime + 2;
+
+    var time = possibletime.reduce((acc, time) => {
+      if(acc === null || time === currenttime || try_time >= time) {
+        return time;
+      }
+      return acc;
+    }, null);
+
     this.state = {
       loading: true,
+      data: [{city: 1}],
+      error: [],
       city: process.env.REACT_APP_PERGAMINO_ID,
-      data: [],
-      error: []
+      time,
+      startDate: current
     }
   }
 
@@ -36,46 +49,28 @@ export default class Forecast extends Component {
     return (valNum - 273.15);
   }
 
-  fetchCurrent = async city => {
-    this.setState({loading: true});
+  componentDidMount() {
+    this.setState({
+      loading: false
+    });
+  }
 
-    axios.get( 'http://api.openweathermap.org/data/2.5/forecast?id=' + city + '&appid=' + KEY)
-      .then(res => {
-          this.setState({
-            loading: false,
-            city,
-            data: res.data
-          });
-      })
-      .catch(error => {
-        this.setState({
-          loading: false,
-          error
-        });
-      });
+  handleDateChange = date => {
+    this.setState({
+      startDate: date
+    });
+  };
+
+  handleTimeChange = e => {
+    this.setState({time: e.target.value});
   }
 
   handleCityChange = e => {
-    this.fetchCurrent(e.target.value);
+    this.setState({city: e.target.value});
   }
 
-  handleStoreData = () => {
-
-    const today = new Date().getTime();
-    const datenice = this.formatDate(today / 1000);
-    const prediction = {
-      city: this.state.city,
-      date: today,
-      datenice,
-      forecast: this.state.data
-    };
-
-    const db = firebase.firestore();
-    db.collection('predictions').add(prediction);
-  }
-
-  componentDidMount() {
-    this.fetchCurrent(this.state.city);
+  handleUpdateData = () => {
+    console.log('a');
   }
 
   render() {
@@ -115,7 +110,7 @@ export default class Forecast extends Component {
           <div className="row">
             <div className="Home__col col-12 col-md-12">
               <div className="card">
-                <h1>5 day forecast (every 3 hours)</h1>
+                <h1>Compare with past predictions</h1>
               </div>
             </div>
           </div>
@@ -133,8 +128,32 @@ export default class Forecast extends Component {
                     <option value={process.env.REACT_APP_BUENOS_AIRES_ID} >Buenos Aires</option>
                   </select>
                 </div>
+                <div className="datetime">
+                  <label htmlFor="datetime">Date</label>
+                  <DatePicker
+                    selected={this.state.startDate}
+                    onChange={this.handleDateChange}
+                  />
+                </div>
+                <div className="time">
+                  <label htmlFor="time">Time</label>
+                  <select
+                    name="time"
+                    value={this.state.time}
+                    onChange={this.handleTimeChange}
+                  >
+                    <option value="0">00 hs</option>
+                    <option value="3">3 AM</option>
+                    <option value="6">6 AM</option>
+                    <option value="9">9 AM</option>
+                    <option value="12">12 hs</option>
+                    <option value="15">3 PM</option>
+                    <option value="18">6 PM</option>
+                    <option value="21">9 PM</option>
+                  </select>
+                </div>
                 <div className="store">
-                  <button onClick={this.handleStoreData} >Store Data</button>
+                  <button onClick={this.handleUpdateData} >Update Chart</button>
                 </div>
               </div>
             </div>
@@ -157,23 +176,17 @@ export default class Forecast extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                  {
-                    this.state.data.list.map((item, key) => {
-                      return (
-                        <tr key={key}>
-                          <td>{ this.formatDate(item.dt) }</td>
-                          <td>{ item.weather[0].main + ' - ' + item.weather[0].description }</td>
-                          <td>{ this.temperatureConverter(item.main.temp).toFixed(2) } &deg;C</td>
-                          <td>{ this.temperatureConverter(item.main.feels_like).toFixed(2) } &deg;C</td>
-                          <td>{ this.temperatureConverter(item.main.temp_min).toFixed(2) } &deg;C</td>
-                          <td>{ this.temperatureConverter(item.main.temp_max).toFixed(2) } &deg;C</td>
-                          <td>{ item.main.pressure } hPa</td>
-                          <td>{ item.main.humidity }%</td>
-                          <td>{ item.wind.speed } m/s</td>
-                        </tr>
-                      )
-                    })
-                  }
+                    <tr>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                      <td>--</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
