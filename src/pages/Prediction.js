@@ -41,8 +41,9 @@ export default class Forecast extends Component {
   }
 
   componentDidMount() {
-    const db = firebase.firestore();
+
     const newdata = [];
+    const db = firebase.firestore();
     var that = this;
     db.collection("predictions").get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
@@ -53,7 +54,7 @@ export default class Forecast extends Component {
             data: doc.data()
           });
       });
-      console.log(newdata);
+      //console.log(newdata);
       that.setState({
         data: newdata,
         loading: false
@@ -80,16 +81,16 @@ export default class Forecast extends Component {
     if(this.state.data.length === 0) {
         return (
           <div className="Home">
-          <div className="container">
-            <div className="row">
-              <div className="Home__col col-12 col-md-12">
-                <div className="card">
-                  <p>No data found</p>
+            <div className="container">
+              <div className="row">
+                <div className="Home__col col-12 col-md-12">
+                  <div className="card">
+                    <p>No data found</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         )
     }
     return (

@@ -27,7 +27,7 @@ export default class Current extends Component {
     const res = await axios.get( 'http://api.openweathermap.org/data/2.5/weather?id=' + city + '&appid=' + KEY)
       .then(res => {
           var data = res.data;
-          console.log(data);
+          //console.log(data);
           this.setState({
             loading: false,
             city,
@@ -39,7 +39,7 @@ export default class Current extends Component {
   }
 
   handleCityChange = e => {
-    console.log(e.target.value);
+    //console.log(e.target.value);
     this.fetchCurrent(e.target.value);
   }
 

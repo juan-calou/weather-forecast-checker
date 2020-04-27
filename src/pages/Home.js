@@ -1,11 +1,28 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudSun, faBuilding, faChartBar } from '@fortawesome/free-solid-svg-icons'
 
 import './styles/Home.css';
 
 export default class Home extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      checkAuth: false,
+      user: null
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      checkAuth: true,
+      user: {uid: 1}
+    });
+  }
+
   render() {
     return (
       <div className="Home">

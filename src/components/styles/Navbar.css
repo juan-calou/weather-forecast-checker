@@ -24,6 +24,10 @@
   position: absolute;
   top: 40px;
 }
+.menubottom {
+  position: absolute;
+  bottom: 40px;
+}
 .link {
   margin: 0px;
   padding: 10px;;

@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import './global.css';
-import App from './components/App';
+import LogApp from './components/LogApp';
 
 const container = document.getElementById('app');
 
-ReactDOM.render(<App />, container);
+ReactDOM.render(<LogApp />, container);

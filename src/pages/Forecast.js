@@ -97,16 +97,16 @@ export default class Forecast extends Component {
     if(this.state.data.length === 0) {
         return (
           <div className="Home">
-          <div className="container">
-            <div className="row">
-              <div className="Home__col col-12 col-md-12">
-                <div className="card">
-                  <p>No data found</p>
+            <div className="container">
+              <div className="row">
+                <div className="Home__col col-12 col-md-12">
+                  <div className="card">
+                    <p>No data found</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
         )
     }
     return (
