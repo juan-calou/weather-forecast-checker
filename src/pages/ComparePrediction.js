@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import firebase from '../components/firebase';
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -14,20 +15,21 @@ export default class Forecast extends Component {
     const currenttime = current.getHours();
     const possibletime = [0,3,6,9,12,15,18,21];
     const try_time = currenttime + 2;
+    var time = 0;
 
-    var time = possibletime.reduce((acc, time) => {
-      if(acc === null || time === currenttime || try_time >= time) {
+    time = possibletime.reduce((acc, time) => {
+      if(acc === 0 || time === currenttime || try_time >= time) {
         return time;
       }
       return acc;
-    }, null);
+    }, 0);
 
     this.state = {
       loading: true,
-      data: [{city: 1}],
+      data: [],
       error: [],
       city: process.env.REACT_APP_PERGAMINO_ID,
-      time,
+      time: time.toString(),
       startDate: current
     }
   }
@@ -70,7 +72,49 @@ export default class Forecast extends Component {
   }
 
   handleUpdateData = () => {
-    console.log('a');
+    //console.log(this.state.city, this.state.startDate, this.state.time);
+    // this.state.city
+    // this.state.startDate
+    // this.state.time
+    var time__ = this.state.time;
+    var date__ = this.state.startDate;
+
+    this.setState({loading: true});
+
+    var newdata = [];
+    var that = this;
+    /// add date filter (5 days before)
+    firebase.db.collection("predictions")
+      .where("city", "==", this.state.city)
+      .orderBy("date", "desc")
+      .get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          let temp = doc.data();
+          console.log(temp.datenice);
+          var datepred = temp.datenice;
+          temp.forecast.list.reduce((acc, item) => {
+            var temptime = that.formatDate(item.dt);
+            var temptimesmall = temptime.slice(-2);
+            console.log(time__, temptimesmall);
+            if(temptimesmall === time__) {
+              var tempdate = that.formatDate(item.dt).slice(0,10);
+              var tempdate2 = that.formatDate(date__ / 1000).slice(0,10);
+              console.log(tempdate, tempdate2);
+              if(tempdate == tempdate2){
+                newdata.push({datepred, item});
+              }
+            }
+            return 0;
+          }, []);
+        });
+        console.log(newdata);
+        that.setState({
+          data: newdata,
+          loading: false
+        });
+      });
+
   }
 
   render() {
@@ -88,21 +132,6 @@ export default class Forecast extends Component {
           </div>
         </div>
       )
-    }
-    if(this.state.data.length === 0) {
-        return (
-          <div className="Home">
-            <div className="container">
-              <div className="row">
-                <div className="Home__col col-12 col-md-12">
-                  <div className="card">
-                    <p>No data found</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )
     }
     return (
       <div className="Home">
@@ -142,10 +171,10 @@ export default class Forecast extends Component {
                     value={this.state.time}
                     onChange={this.handleTimeChange}
                   >
-                    <option value="0">00 hs</option>
-                    <option value="3">3 AM</option>
-                    <option value="6">6 AM</option>
-                    <option value="9">9 AM</option>
+                    <option value=" 0">00 hs</option>
+                    <option value=" 3">3 AM</option>
+                    <option value=" 6">6 AM</option>
+                    <option value=" 9">9 AM</option>
                     <option value="12">12 hs</option>
                     <option value="15">3 PM</option>
                     <option value="18">6 PM</option>
@@ -158,40 +187,62 @@ export default class Forecast extends Component {
               </div>
             </div>
           </div>
-          <div className="row">
-            <div className="Home__col col-12 col-md-12">
-              <div className="card">
-                <table className="table table-bordered table-striped">
-                  <thead>
-                    <tr>
-                      <th scope="col">Date</th>
-                      <th scope="col">Description</th>
-                      <th scope="col">Temperature</th>
-                      <th scope="col">Feels Like</th>
-                      <th scope="col">Min</th>
-                      <th scope="col">Max</th>
-                      <th scope="col">Pressure</th>
-                      <th scope="col">Humidity</th>
-                      <th scope="col">Wind Speed</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>--</td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td>--</td>
-                      <td>--</td>
-                    </tr>
-                  </tbody>
-                </table>
+
+          { (this.state.data.length === 0) ?
+
+              <div className="row">
+                <div className="Home__col col-12 col-md-12">
+                  <div className="card">
+                    <p>No data found</p>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+
+          :
+
+              <div className="row">
+                <div className="Home__col col-12 col-md-12">
+                  <div className="card">
+                  <table className="table table-bordered table-striped table-sm">
+                    <thead>
+                      <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Temperature</th>
+                        <th scope="col">Feels Like</th>
+                        <th scope="col">Min</th>
+                        <th scope="col">Max</th>
+                        <th scope="col">Pressure</th>
+                        <th scope="col">Humidity</th>
+                        <th scope="col">Wind Speed</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {
+                      this.state.data.map((item, key) => {
+                        return (
+                          <tr key={key}>
+                            <td>{ item.datepred }</td>
+                            <td>{ this.formatDate(item.item.dt) }</td>
+                            <td>{ item.item.weather[0].main + ' - ' + item.item.weather[0].description }</td>
+                            <td>{ this.temperatureConverter(item.item.main.temp).toFixed(2) } &deg;C</td>
+                            <td>{ this.temperatureConverter(item.item.main.feels_like).toFixed(2) } &deg;C</td>
+                            <td>{ this.temperatureConverter(item.item.main.temp_min).toFixed(2) } &deg;C</td>
+                            <td>{ this.temperatureConverter(item.item.main.temp_max).toFixed(2) } &deg;C</td>
+                            <td>{ item.item.main.pressure } hPa</td>
+                            <td>{ item.item.main.humidity }%</td>
+                            <td>{ item.item.wind.speed } m/s</td>
+                          </tr>
+                        )
+                      })
+                    }
+                    </tbody>
+                  </table>
+                  </div>
+                </div>
+              </div>
+            }
         </div>
       </div>
     );

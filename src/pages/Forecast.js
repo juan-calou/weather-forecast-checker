@@ -70,8 +70,7 @@ export default class Forecast extends Component {
       forecast: this.state.data
     };
 
-    const db = firebase.firestore();
-    db.collection('predictions').add(prediction);
+    firebase.db.collection('predictions').add(prediction);
   }
 
   componentDidMount() {

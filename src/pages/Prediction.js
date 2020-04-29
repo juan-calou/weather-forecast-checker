@@ -43,9 +43,8 @@ export default class Forecast extends Component {
   componentDidMount() {
 
     const newdata = [];
-    const db = firebase.firestore();
     var that = this;
-    db.collection("predictions").get().then(function(querySnapshot) {
+    firebase.db.collection("predictions").get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
           // console.log(doc.id, " => ", doc.data());

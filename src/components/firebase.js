@@ -1,6 +1,8 @@
-import firebase from 'firebase';
+import app from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
-const firebaseConfig = {
+const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "weather-forecast-checker.firebaseapp.com",
   databaseURL: "https://weather-forecast-checker.firebaseio.com",
@@ -10,6 +12,20 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
-firebase.initializeApp(firebaseConfig);
+class Firebase {
+  constructor() {
+      app.initializeApp(config);
+      this.auth = app.auth();
+      this.db = app.firestore();
+  }
 
-export default firebase;
+  login(email, password) {
+    return this.auth.signInWithEmailAndPassword(email, password);
+  }
+
+  logout() {
+    return this.auth.signOut();
+  }
+}
+
+export default new Firebase();

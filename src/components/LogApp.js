@@ -18,8 +18,7 @@ export default class LogApp extends Component {
   }
 
   authlistener = () => {
-    console.log(1);
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth.onAuthStateChanged((user) => {
       console.log(user);
       if (user) {
         this.setState({ user });

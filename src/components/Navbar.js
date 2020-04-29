@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import firebase from './firebase';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,29 +8,13 @@ import { faCloudSun, faCloudSunRain, faWalking, faCompress } from '@fortawesome/
 import './styles/Navbar.css';
 
 export default class Navbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      routeName: ''
-    }
-  }
 
   logout = () => {
-    var that = this;
-    firebase.auth().signOut().then(function() {
-      that.setState({
-        routeName: '/login'
-      });
-    }).catch(function(error) {
-      console.log(error);
-    });
+    firebase.logout();
   }
 
   render() {
     const path = window.location.pathname;
-    if (this.state.routeName) {
-      return <Redirect to={this.state.routeName}/>
-    }
     return (
       <aside className="navbar">
         <div className="menu">

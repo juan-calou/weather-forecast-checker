@@ -22,17 +22,14 @@ function Login() {
 
   const [firebaseError, setFirebaseError] = React.useState(null);
 
-  function authenticateUser() {
+  async function authenticateUser() {
     const { email, password } = values;
-    console.log(email, password);
-    firebase.auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(function(data) {
-        console.log('ok');
-      })
-      .catch(function(error) {
-        setFirebaseError(error.message);
-      });
+
+    try {
+      await firebase.login(email, password);
+    } catch(err) {
+      setFirebaseError(err.message);
+    }
   }
 
   return (
