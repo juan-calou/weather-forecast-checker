@@ -11,7 +11,8 @@ export default class Forecast extends Component {
     this.state = {
       loading: true,
       data: [],
-      error: []
+      error: [],
+      count: 0
     }
   }
 
@@ -44,6 +45,7 @@ export default class Forecast extends Component {
 
     const newdata = [];
     var that = this;
+    var thiscount = 0;
     firebase.db.collection("predictions").get().then(function(querySnapshot) {
       querySnapshot.forEach(function(doc) {
           // doc.data() is never undefined for query doc snapshots
@@ -52,11 +54,13 @@ export default class Forecast extends Component {
             id: doc.id,
             data: doc.data()
           });
+          thiscount++;
       });
       //console.log(newdata);
       that.setState({
         data: newdata,
-        loading: false
+        loading: false,
+        count: thiscount
       });
     });
   }
@@ -98,7 +102,7 @@ export default class Forecast extends Component {
           <div className="row">
             <div className="Home__col col-12 col-md-12">
               <div className="card">
-                <h1>Predictions stored on the database</h1>
+                <h1>Predictions stored on the database ({this.state.count})</h1>
               </div>
             </div>
           </div>

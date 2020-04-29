@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from '../components/firebase';
+import axios from 'axios';
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -26,6 +27,7 @@ export default class Forecast extends Component {
 
     this.state = {
       loading: true,
+      datacurrent: [],
       data: [],
       error: [],
       city: process.env.REACT_APP_PERGAMINO_ID,
@@ -52,9 +54,23 @@ export default class Forecast extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      loading: false
-    });
+    this.fetchCurrent(this.state.city);
+  }
+
+  fetchCurrent = async city => {
+    this.setState({loading: true});
+    const KEY = process.env.REACT_APP_API_KEY;
+
+    const res = await axios.get( 'http://api.openweathermap.org/data/2.5/weather?id=' + city + '&appid=' + KEY)
+      .then(res => {
+          var data = res.data;
+          this.setState({
+            loading: false,
+            datacurrent: data
+          });
+      })
+      .catch(err => console.log(err));
+      return res;
   }
 
   handleDateChange = date => {
@@ -101,7 +117,7 @@ export default class Forecast extends Component {
               var tempdate = that.formatDate(item.dt).slice(0,10);
               var tempdate2 = that.formatDate(date__ / 1000).slice(0,10);
               console.log(tempdate, tempdate2);
-              if(tempdate == tempdate2){
+              if(tempdate === tempdate2){
                 newdata.push({datepred, item});
               }
             }
@@ -219,6 +235,18 @@ export default class Forecast extends Component {
                       </tr>
                     </thead>
                     <tbody>
+                      <tr>
+                        <td>{ this.formatDate(this.state.datacurrent.dt) }</td>
+                        <td>{ this.formatDate(this.state.datacurrent.dt) }</td>
+                        <td>{ this.state.datacurrent.weather[0].main + ' - ' + this.state.datacurrent.weather[0].description }</td>
+                        <td>{ this.temperatureConverter(this.state.datacurrent.main.temp).toFixed(2) } &deg;C</td>
+                        <td>{ this.temperatureConverter(this.state.datacurrent.main.feels_like).toFixed(2) } &deg;C</td>
+                        <td>{ this.temperatureConverter(this.state.datacurrent.main.temp_min).toFixed(2) } &deg;C</td>
+                        <td>{ this.temperatureConverter(this.state.datacurrent.main.temp_max).toFixed(2) } &deg;C</td>
+                        <td>{ this.state.datacurrent.main.pressure } hPa</td>
+                        <td>{ this.state.datacurrent.main.humidity }%</td>
+                        <td>{ this.state.datacurrent.wind.speed } m/s</td>
+                      </tr>
                     {
                       this.state.data.map((item, key) => {
                         return (
