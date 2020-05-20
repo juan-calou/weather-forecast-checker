@@ -39,7 +39,7 @@ export default class Forecast extends Component {
   fetchCurrent = async city => {
     this.setState({loading: true});
 
-    axios.get( 'http://api.openweathermap.org/data/2.5/forecast?id=' + city + '&appid=' + KEY)
+    axios.get( 'https://api.openweathermap.org/data/2.5/forecast?id=' + city + '&appid=' + KEY)
       .then(res => {
           this.setState({
             loading: false,

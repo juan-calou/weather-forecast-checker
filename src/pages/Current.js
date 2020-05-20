@@ -24,7 +24,7 @@ export default class Current extends Component {
     this.setState({loading: true});
     const KEY = process.env.REACT_APP_API_KEY;
 
-    const res = await axios.get( 'http://api.openweathermap.org/data/2.5/weather?id=' + city + '&appid=' + KEY)
+    const res = await axios.get( 'https://api.openweathermap.org/data/2.5/weather?id=' + city + '&appid=' + KEY)
       .then(res => {
           var data = res.data;
           //console.log(data);
